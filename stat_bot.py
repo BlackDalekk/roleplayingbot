@@ -1,35 +1,18 @@
 from distutils.cmd import Command
-from email import message
-from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-
+from create_bot import dp
 import os
-
-bot = Bot(token=os.getenv('TOKEN'))
-dp = Dispatcher(bot)
 
 
 
 async def on_startup(_):
     print('Бот активирован')
 
+from handlers import client, admin, other
 
-@dp.message_handler(commands = ['start', 'help'])
-async def command_start(message : types.Message):
-    await message.answer('Привет, этот бот поможет тебе хранить твоих персонажей')
+client.register_handlers_client(dp)
 
 
-#@dp.message_handler()
-#async def echo_send(message : types.Message):
-    #await message.answer(message.text)
-    #await message.reply(message.text)
-    #await bot.send_message(message.from_user.id, message.text)
-
-@dp.message_handler(commands = ['add_new_hero' , 'добавить нового героя'])
-async def command_start(message : types.Message):
-    await message.answer('Введите имя вашего нового героя')
-    #code fsm
 
 
 
