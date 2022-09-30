@@ -2,6 +2,7 @@ from asyncore import dispatcher
 from aiogram import types
 from email import message
 from create_bot import dp, bot
+from keyboards import kb_client, make_row_keyboard
 
 
 
@@ -10,7 +11,7 @@ async def command_start(message : types.Message):
 
 
 async def add_new_hero(message : types.Message):
-    await message.answer('Введите имя вашего нового героя')
+    await message.answer('Давайте начнем', reply_markup=make_row_keyboard(["привет", "пока"]))
     #code fsm
 
 

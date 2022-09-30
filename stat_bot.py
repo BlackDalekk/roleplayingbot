@@ -7,7 +7,7 @@ import os
 
 async def on_startup(_):
     print('Бот активирован')
-
+    
 from handlers import client, admin, other
 
 client.register_handlers_client(dp)
