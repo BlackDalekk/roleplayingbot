@@ -35,11 +35,17 @@ async def help_func(message : types.Message):
                                         '/Удалить_героя'], True))
 
 async def show_personal_heroes(message : types.Message):
-    await sqlite_db.read_sql(message)
+    await sqlite_db.showPersonalData(message)
+
+async def show_all_heroes(message : types.Message):
+    NOP
 
 async def start_creating_a_new_hero(message : types.Message):
-    await Creating_a_new_hero.name.set()
-    await message.answer('Введи имя героя', reply_markup=make_row_keyboard(['/Отмена'], one_time_keyboard=bool(False)))
+    if sqlite_db.isInTheDatabase(message) is None:
+        await Creating_a_new_hero.name.set()
+        await message.answer('Введи имя героя', reply_markup=make_row_keyboard(['/Отмена'], one_time_keyboard=bool(False)))
+    else:
+        await message.answer('Пока можно создать только одного персонажа')
 
 async def cancel_handler(message : types.Message, state : Creating_a_new_hero):
     current_state = await state.get_state()
@@ -83,3 +89,7 @@ def register_handlers_client(dp : dispatcher):
 
 
     
+#добавить изменение данных - изменение биографии
+#добавить админа - изменение любых данных, удадение любых данных, просмотр всех персонажей
+#данные персонажа - фото, экипировка, класс, hp, мана
+#открытая биография - закрытая биография

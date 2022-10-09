@@ -18,9 +18,12 @@ async def sql_add_command(state, message : types.Message):
         cur.execute('INSERT INTO heroes VALUES (?, ?, ?)', (message.from_user.id, data['name'], data['biography']))
         base.commit()
 
-async def read_sql(message : types.Message):
-    isInTheDatabase = cur.execute('SELECT * FROM heroes WHERE userID=?', (message.from_user.id, ))
-    if isInTheDatabase.fetchone() is None:
+def isInTheDatabase(message):
+    isIn = cur.execute('SELECT * FROM heroes WHERE userID=?', (message.from_user.id, ))
+    return isIn.fetchone() #None or not
+
+async def showPersonalData(message : types.Message): 
+    if isInTheDatabase(message) is None:
         await message.answer('У вас нет персонажей')
     else:
         for ret in cur.execute('SELECT userID, name, biography FROM heroes').fetchall():
@@ -29,9 +32,8 @@ async def read_sql(message : types.Message):
                 await message.answer('Имя: ' + ret[1] + '\nБиография: ' + ret[-1])
 
 async def delete_sql(message : types.Message):
-     isInTheDatabase = cur.execute('SELECT * FROM heroes WHERE userID=?', (message.from_user.id, ))
-     if isInTheDatabase.fetchone() is None:
+    if isInTheDatabase(message) is None:
         await message.answer('У вас нет персонажей')
-     else:
+    else:
         cur.execute('DELETE FROM heroes WHERE userID=?', (message.from_user.id, ))
         await message.answer('Герой удален')
