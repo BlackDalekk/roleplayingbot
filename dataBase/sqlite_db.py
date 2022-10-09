@@ -1,3 +1,4 @@
+from distutils.util import execute
 from email import message
 import sqlite3 as sq
 from telnetlib import NOP
@@ -30,6 +31,11 @@ async def showPersonalData(message : types.Message):
             #await message.answer(str(ret[0]) + ' ' + str(message.from_user.id))
             if(int(ret[0]) == int(message.from_user.id)):
                 await message.answer('Имя: ' + ret[1] + '\nБиография: ' + ret[-1])
+                
+
+async def showAllOpenData(message : types.Message):
+    for ret in cur.execute('SELECT userID, name, biography FROM heroes').fetchall():
+        await message.answer('Имя: ' + ret[1] + '\nБиография: ' + ret[-1])
 
 async def delete_sql(message : types.Message):
     if isInTheDatabase(message) is None:
@@ -37,3 +43,4 @@ async def delete_sql(message : types.Message):
     else:
         cur.execute('DELETE FROM heroes WHERE userID=?', (message.from_user.id, ))
         await message.answer('Герой удален')
+    base.commit()
