@@ -1,19 +1,11 @@
 from asyncore import dispatcher
-from distutils.cmd import Command
-from imaplib import Commands
-from multiprocessing.connection import answer_challenge
-from telnetlib import NOP
-from tokenize import String
 from aiogram import types
-from aiogram.types import ReplyKeyboardRemove
-from email import message, message_from_binary_file
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher.filters import Text
+
 from create_bot import dp, bot
 from keyboards import mainMenuKeyboard
 from keyboards import make_row_keyboard
-
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher.filters import Text
 from dataBase import sqlite_db
 
 
