@@ -1,1 +1,1 @@
-from .sqlite_db import heroes_db
+from .sqlite_db import HeroesDB

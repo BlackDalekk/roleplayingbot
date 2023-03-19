@@ -8,11 +8,19 @@ def make_row_keyboard(items: list[str], one_time_keyboard: bool) -> ReplyKeyboar
     )
 
 
-mainMenuKeyboard = make_row_keyboard(
+main_menu_keyboard = make_row_keyboard(
     [
         "/Добавить_нового_героя",
         "/Посмотреть_своих_героев",
         "/Удалить_героя",
+        "/Посмотреть_всех_героев",
+    ],
+    True,
+)
+
+start_keyboard = make_row_keyboard(
+    [
+        "/Добавить_нового_героя",
         "/Посмотреть_всех_героев",
     ],
     True,
