@@ -5,18 +5,11 @@ from aiogram.dispatcher import Dispatcher
 
 from src.keyboards import main_menu_keyboard
 from src.keyboards import make_row_keyboard
-from src.data_base.sqlite_db import heroes_db
 
 
 class CreatingNewHero(StatesGroup):
     name = State()
     biography = State()
-
-    async def help_func(self, message: types.Message):
-        await message.answer(
-            "/Посмотреть_своих_героев\n/Добавить_нового_героя\n/Удалить_героя",
-            reply_markup=main_menu_keyboard,
-        )
 
     async def show_personal_heroes(self, message: types.Message):
         await self.db.show_personal_data(message)
@@ -37,7 +30,7 @@ class CreatingNewHero(StatesGroup):
         else:
             await message.answer("Пока можно создать только одного персонажа")
 
-    async def cancel_handler(self, message: types.Message, state: CreatingNewHero):
+    async def cancel_handler(self, message: types.Message, state):
         current_state = await state.get_state()
         if current_state is None:
             return
@@ -62,7 +55,7 @@ class CreatingNewHero(StatesGroup):
             "Начинаем загружать на сервер", reply_markup=main_menu_keyboard
         )
 
-        await self.db.sql_add_command(state, message)
+        await self.db.add_hero(state, message)
         await message.answer("Данные сохранены")
         await state.finish()
 

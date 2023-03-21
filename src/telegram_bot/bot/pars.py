@@ -14,3 +14,6 @@ async def pars_function(function):
 
 def get_name_from_row_data(data: dict) -> str:
     return data["name"]
+
+def get_description_from_row_data(data: dict) -> str:
+    return data["description"]

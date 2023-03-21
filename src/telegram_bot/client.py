@@ -17,3 +17,4 @@ class ClientTelegramBot:
             self.bot.cancel_handler_creation_new_hero, commands=["Отмена", "отмена"]
         )
         dp.register_message_handler(self.bot.set_a_name_for_the_hero, state=CreatingNewHero.name)
+        dp.register_message_handler(self.bot.set_hero_description, state=CreatingNewHero.description)

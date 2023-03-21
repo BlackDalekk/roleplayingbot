@@ -41,16 +41,16 @@ class TelegramBot(Bot):
         )
 
     async def start_creating_a_new_hero(self, message: types.Message):
-        #if self.db.is_in_the_database(message) is None:
-        await struct.CreatingNewHero.name.set()
-        await message.answer(
-            "Введи имя героя",
-            reply_markup=make_row_keyboard(
-                ["/Отмена"], one_time_keyboard=bool(False)
-            ),
-        )
-        #else:
-            #await message.answer("Пока можно создать только одного персонажа")
+        if self.db.is_in_the_database(message.from_user.id) is None:
+            await struct.CreatingNewHero.name.set()
+            await message.answer(
+                "Введи имя героя",
+                reply_markup=make_row_keyboard(
+                    ["/Отмена"], one_time_keyboard=bool(False)
+                ),
+            )
+        else:
+            await message.answer("Пока можно создать только одного персонажа")
 
     @staticmethod
     async def cancel_handler_creation_new_hero(message: types.Message, state: FSMContext):
@@ -67,6 +67,25 @@ class TelegramBot(Bot):
         async with state.proxy() as data:
             data["name"] = message.text
 
+        await struct.CreatingNewHero.next()
+        await message.answer("Введите короткое описание героя. Как он выглядит и какое впечатление производит")
+
+    @staticmethod
+    async def set_hero_description(
+            message: types.Message, state: FSMContext
+    ):
         async with state.proxy() as data:
-            Hero(pars.get_name_from_row_data(data), "").uploading_to_database(message.from_user.id)
+            data["description"] = message.text
+
+        await message.answer(
+            "Начинаем загружать на сервер", reply_markup=main_menu_keyboard
+        )
+
+        async with state.proxy() as data:
+            Hero(
+                pars.get_name_from_row_data(data),
+                pars.get_description_from_row_data(data)
+            ).uploading_to_database(message.from_user.id)
+
+        await message.answer("Данные сохранены")
         await state.finish()

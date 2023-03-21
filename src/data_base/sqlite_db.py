@@ -1,11 +1,8 @@
 import sqlite3 as sq
 import logging
 
-from aiogram import types
-
 
 class HeroesDB:
-
     cur = sq.Cursor
     base = sq.Connection
 
@@ -20,24 +17,25 @@ class HeroesDB:
         if cls.base:
             logging.info(msg="Data base connected!")
         cls.base.execute(
-            "CREATE TABLE IF NOT EXISTS heroes(userID INTEGER, name TEXT)"
+            "CREATE TABLE IF NOT EXISTS heroes(userID INTEGER, name TEXT, description TEXT)"
         )
         cls.base.commit()
 
     @classmethod
     def add_hero(cls, user_id: int, data: dict):
         name = data["name"]
+        description = data["description"]
         cls.cur.execute(
-                "INSERT INTO heroes VALUES (?, ?)",
-                (user_id, name),
+                "INSERT INTO heroes VALUES (?, ?, ?)",
+                (user_id, name, description),
             )
         cls.base.commit()
 
-    # @classmethod
-    # def is_in_the_database(cls, message):
-    #     is_in = cls.cur.execute("SELECT * FROM heroes WHERE userID=?", (message.from_user.id,))
-    #     return is_in.fetchone()  # None or not
-    #
+    @classmethod
+    def is_in_the_database(cls, user_id: int):
+        is_in = cls.cur.execute("SELECT * FROM heroes WHERE userID=?", (user_id,))
+        return is_in.fetchone()  # None or not
+
     # @classmethod
     # async def show_personal_data(cls, message: types.Message):
     #     if cls.is_in_the_database(message) is None:
